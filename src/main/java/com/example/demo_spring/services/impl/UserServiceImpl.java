@@ -40,7 +40,11 @@ public class UserServiceImpl implements UserService {
                     .age(request.getAge())
                     .gender(request.getGender())
                     .build());
-            mailUtil.sendEmail(request.getEmail(), "Account activation", mailBody);
+            Runnable thread =()->{
+
+                mailUtil.sendEmail(request.getEmail(), "Account activation", mailBody);
+            };
+            new Thread(thread).start();
             return UserRegistrationResponse.builder()
                     .success(true)
                     .message("Check you email")

@@ -6,6 +6,8 @@ import com.example.demo_spring.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -21,6 +23,11 @@ public class UserController {
     public UserRegistrationResponse register(@RequestBody UserRegisterRequest request) {
         return userService.register(request);
 
+    }
+
+    @GetMapping("/activate")
+    public String activate(@RequestParam("token") String token) {
+        return userService.activate(token);
     }
 
 

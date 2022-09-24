@@ -41,8 +41,8 @@ public class User {
     @Column
     private int age;
 
-    @Column
-    private UUID activationToken;
+    @Column(columnDefinition = "VARCHAR(256)")
+    private  String activationToken;
 
     @Column
     @Enumerated(EnumType.STRING)

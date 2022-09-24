@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,10 +30,10 @@ public class UserServiceImpl implements UserService {
                     .build();
         }else {
             UUID token = UUID.randomUUID();
-            String mailBody = "To verify your registration please click on link or ignore it"+
+            String mailBody = "To verify your registration please click on link or ignore it "+
                     "http://localhost:8090/user/activate?token="+token;
             userRepository.save(User.builder()
-                    .activationToken(token)
+                    .activationToken(token.toString())
                     .email(request.getEmail())
                     .password(request.getPassword())
                     .name(request.getName())
@@ -50,5 +51,17 @@ public class UserServiceImpl implements UserService {
                     .message("Check you email")
                     .build();
         }
+    }
+
+    @Override
+    public String activate(String token) {
+        Optional<User> byActivationToken = userRepository.findByActivationToken(token);
+        if(byActivationToken.isPresent()){
+            User user = byActivationToken.get();
+            user.setActivationToken(null);
+            userRepository.save(user);
+            return "You succesfully activated your account.";
+        }
+        return "Something went wrong";
     }
 }

@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegistrationResponse {
+public class UserRegistrationResponse implements Serializable {
     public boolean success;
     public String message;
 }

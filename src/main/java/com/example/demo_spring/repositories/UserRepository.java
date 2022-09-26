@@ -27,4 +27,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 //    @Query(value = "select * from users u where u.age=:p", nativeQuery = true)
 //    List<User> poxos(@Param("p") int age);
+
+
+    @Query(value = "select u from User u where u.email=:emo and u.password=:passo")
+    Optional<User> findByEmailAndPassword(@Param("emo") String email,
+                                          @Param("passo") String password);
 }

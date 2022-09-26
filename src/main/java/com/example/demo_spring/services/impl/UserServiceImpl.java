@@ -1,7 +1,11 @@
 package com.example.demo_spring.services.impl;
 
+import com.example.demo_spring.configs.MyClass;
+import com.example.demo_spring.dto.request.AuthenticationRequest;
 import com.example.demo_spring.dto.request.UserRegisterRequest;
+import com.example.demo_spring.dto.response.AuthenticationResponse;
 import com.example.demo_spring.dto.response.UserRegistrationResponse;
+import com.example.demo_spring.exceptions.UserNotFoundException;
 import com.example.demo_spring.models.User;
 import com.example.demo_spring.repositories.UserRepository;
 import com.example.demo_spring.services.UserService;
@@ -20,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private final  UserRepository userRepository;
     private final MailUtil mailUtil;
+    private final MyClass myClass ;
 
 
     @Override
@@ -63,5 +68,14 @@ public class UserServiceImpl implements UserService {
             return "You succesfully activated your account.";
         }
         return "Something went wrong";
+    }
+
+    @Override
+    public AuthenticationResponse login(AuthenticationRequest request) {
+        Optional<User> user = userRepository.findByEmailAndPassword(request.getUsername(), request.getPassword());
+        if(user.isPresent() && user.get().getActivationToken()==null){
+            return new AuthenticationResponse(true, "Ok", user.get().getId());
+        }
+        throw new UserNotFoundException("User not found");
     }
 }
